@@ -1,0 +1,75 @@
+Traceback (most recent call last):
+  File "/Users/joshuadrew/Desktop/CompSci/ML/FINAL/venv/lib/python3.12/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+    executenb(
+  File "/Users/joshuadrew/Desktop/CompSci/ML/FINAL/venv/lib/python3.12/site-packages/nbclient/client.py", line 1314, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/joshuadrew/Desktop/CompSci/ML/FINAL/venv/lib/python3.12/site-packages/jupyter_core/utils/__init__.py", line 165, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.7/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/joshuadrew/Desktop/CompSci/ML/FINAL/venv/lib/python3.12/site-packages/nbclient/client.py", line 709, in async_execute
+    await self.async_execute_cell(
+  File "/Users/joshuadrew/Desktop/CompSci/ML/FINAL/venv/lib/python3.12/site-packages/nbclient/client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/Users/joshuadrew/Desktop/CompSci/ML/FINAL/venv/lib/python3.12/site-packages/nbclient/client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+## trying to rename the training image files to have unique numbering
+import os
+
+def count_files(directory):
+    file_ct = 0
+    for _, _, files in os.walk(directory):
+        file_ct += len(files)
+    return file_ct
+
+training_img_dirs = ['broken_large', 'broken_small', 'contamination', 'good']
+
+total_train_file_count = 0
+
+for img_dir in training_img_dirs:
+    full_path = os.path.join('bottle/train', img_dir)
+    file_ct = count_files(full_path)
+    print(f'{img_dir} has {file_ct} files')
+
+    total_train_file_count += file_ct
+
+print(f'Total training files: {total_train_file_count}')
+
+
+for i in range(len(training_img_dirs)):
+    img_dir = training_img_dirs[i]
+    full_path = os.path.join('bottle/test', img_dir)
+    for j, file in enumerate(os.listdir(full_path)):
+        new_name = f'{img_dir}_{j}.jpg'
+        os.rename(os.path.join(full_path, file), os.path.join(full_path, new_name))
+        print(f'{file} -> {new_name}')
+
+    
+  
+
+------------------
+
+----- stdout -----
+broken_large has 0 files
+broken_small has 0 files
+contamination has 0 files
+good has 0 files
+Total training files: 0
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mFileNotFoundError[0m                         Traceback (most recent call last)
+Cell [0;32mIn[1], line 27[0m
+[1;32m     25[0m img_dir [38;5;241m=[39m training_img_dirs[i]
+[1;32m     26[0m full_path [38;5;241m=[39m os[38;5;241m.[39mpath[38;5;241m.[39mjoin([38;5;124m'[39m[38;5;124mbottle/test[39m[38;5;124m'[39m, img_dir)
+[0;32m---> 27[0m [38;5;28;01mfor[39;00m j, file [38;5;129;01min[39;00m [38;5;28menumerate[39m([43mos[49m[38;5;241;43m.[39;49m[43mlistdir[49m[43m([49m[43mfull_path[49m[43m)[49m):
+[1;32m     28[0m     new_name [38;5;241m=[39m [38;5;124mf[39m[38;5;124m'[39m[38;5;132;01m{[39;00mimg_dir[38;5;132;01m}[39;00m[38;5;124m_[39m[38;5;132;01m{[39;00mj[38;5;132;01m}[39;00m[38;5;124m.jpg[39m[38;5;124m'[39m
+[1;32m     29[0m     os[38;5;241m.[39mrename(os[38;5;241m.[39mpath[38;5;241m.[39mjoin(full_path, file), os[38;5;241m.[39mpath[38;5;241m.[39mjoin(full_path, new_name))
+
+[0;31mFileNotFoundError[0m: [Errno 2] No such file or directory: 'bottle/test/broken_large'
+
